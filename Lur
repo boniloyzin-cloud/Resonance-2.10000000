@@ -1,0 +1,45 @@
+-- 1. Live UI Branding & Credit Wrapper ("by lorexzxz" -> "by Davi")
+task.spawn(function()
+    local CoreGui = game:GetService("CoreGui")
+    local Players = game:GetService("Players")
+    local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    local replacements = {
+        ["by lorexzxz"] = "by Davi",
+        ["Resonance2.10"] = "Reasonce 2.10 by DAVI",
+        ["Resonance v2.10"] = "Reasonce 2.10 by DAVI",
+        ["Resonance v2.9"] = "Reasonce 2.10 by DAVI",
+    }
+
+    local function applyBranding(obj)
+        if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+            local function updateText()
+                local current = obj.Text
+                local updated = current
+                for oldStr, newStr in pairs(replacements) do
+                    if string.find(updated, oldStr, 1, true) then
+                        updated = string.gsub(updated, oldStr, newStr)
+                    end
+                end
+                if obj.Text ~= updated then
+                    obj.Text = updated
+                end
+            end
+            updateText()
+            obj:GetPropertyChangedSignal("Text"):Connect(updateText)
+        end
+    end
+
+    for _, v in ipairs(CoreGui:GetDescendants()) do
+        applyBranding(v)
+    end
+    CoreGui.DescendantAdded:Connect(applyBranding)
+
+    for _, v in ipairs(PlayerGui:GetDescendants()) do
+        applyBranding(v)
+    end
+    PlayerGui.DescendantAdded:Connect(applyBranding)
+end)
+
+-- 2. Execute Script Loader
+loadstring(game:HttpGet("https://raw.githubusercontent.com/boniloyzin-cloud/Resonance-2.10byDAVU/refs/heads/main/resonance-v2.10%20(1).lua"))()
